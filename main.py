@@ -175,7 +175,7 @@ print("------------- \nWitaj w generatorze listy zakupów!\n-------------\nBaza 
 print(*list(jedzenie_dict.keys()), sep= ", ")
 
 
-#nowa_rzecz()
+nowa_rzecz()
 dodawanie()
 inne()
 usuwanie()
