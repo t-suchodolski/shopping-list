@@ -9,27 +9,7 @@ reader = csv.reader(open('menu.csv'))
 
 
 
-def nowa_rzecz():
-    a_file = open("menu.csv", "a")
-    klucz = input("Klucz: ")
-    warto = []
-    while True:
-        wart = input("Wartość: ")
-        if wart != "Koniec":
-            print("Dodano")
-            warto.append(wart)
-            continue
-        if wart == "Koniec":
-            print("Zakończono")
-            break
-    print(*warto, sep=", ")
-    nowaa = {klucz: dict[warto]}
 
-    writer = csv.writer(a_file)
-    for key, value in nowaa.items():
-        writer.writerow([key, value])
-
-    a_file.close()
 
 def nowa_rzecz1111():
     a_file = open("menu.csv", "a")
@@ -175,7 +155,7 @@ print("------------- \nWitaj w generatorze listy zakupów!\n-------------\nBaza 
 print(*list(jedzenie_dict.keys()), sep= ", ")
 
 
-#nowa_rzecz()
+
 dodawanie()
 inne()
 usuwanie()
