@@ -20,7 +20,10 @@ def menu_creator():
             recipe[key].append(input_arg)
             continue
         elif input_arg == "Koniec":
-            print(recipe)
+
+            new_d = pd.Series(recipe)
+            addition = pd.concat([menu, new_d], axis=1)
+            addition.to_csv('menu.csv', index=False)
             break
 
 
