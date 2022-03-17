@@ -1,43 +1,43 @@
-jedzenie = []
+import os
+import pandas as pd
+
+
+menu = pd.read_csv('menu.csv', header=1, encoding='UTF-8')
+print(menu)
 potrawy = []
+jedzenie = menu.columns.tolist()
+jedzenie_set = set(jedzenie)
 
+def menu_creator():
 
+    print("What?")
+    key = input("Dish ")
+    recipe = {key: []}
 
-import csv
-reader = csv.reader(open('menu.csv'))
+    while True:
+        input_arg = input("Ingredient ")
+        if input_arg != 'Koniec':
+            recipe[key].append(input_arg)
+            continue
+        elif input_arg == "Koniec":
+            print(recipe)
+            break
 
-
-
-
-
-
-def nowa_rzecz1111():
-    a_file = open("menu.csv", "a")
-
-    dict = {"Makaron": "Ser"}
-
-    with open('menu.csv', 'w') as f:
-        for key in dict.keys():
-            f.write("%s, %s\n" % (key, dict[key]))
-
-    a_file.close()
 
 
 def dodawanie():
-    for key in jedzenie_dict:
+    for arg in jedzenie:
         print()
     while True:
         nowe = input("Dodaj obiadek: ")
         potrawy.append(nowe)
-        if nowe in jedzenie_dict and nowe != "Koniec":
+        if nowe in jedzenie and nowe != "Koniec":
             print("{} dodano do listy obiadków".format(nowe))
-            jedzenie.extend(jedzenie_dict[nowe])
-            del jedzenie_dict[nowe]
-            print("W bazie pozostało:", *list(jedzenie_dict.keys()), sep=", ")
-            jedzenie_set = set(jedzenie)
+            jedzenie_set.remove(nowe)
+            print("W bazie pozostało:", *jedzenie_set, sep=", ")
             continue
         elif nowe== "Koniec":
-            jedzenie_set = set(jedzenie)
+
             while '' in jedzenie_set:
                 jedzenie_set.remove('')
             print("Twoja lista zakupów to: ", *jedzenie_set, sep='\n- ')
@@ -152,10 +152,9 @@ def podsumowanie():
 
 
 print("------------- \nWitaj w generatorze listy zakupów!\n-------------\nBaza danych zawiera:")
-print(*list(jedzenie_dict.keys()), sep= ", ")
+print(*jedzenie, sep=', ')
 
-
-
+menu_creator()
 dodawanie()
 inne()
 usuwanie()
