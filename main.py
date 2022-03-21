@@ -2,29 +2,28 @@ import os
 import pandas as pd
 
 
-menu = pd.read_csv('menu.csv', header=1, encoding='UTF-8')
-print(menu)
+menu = pd.read_csv('menu.csv', header=0, encoding='UTF-8')
 potrawy = []
 jedzenie = menu.columns.tolist()
 jedzenie_set = set(jedzenie)
 
+
 def menu_creator():
-
-    print("What?")
-    key = input("Dish ")
-    recipe = {key: []}
-
+    key = input("Enter key: ")
     while True:
-        input_arg = input("Ingredient ")
-        if input_arg != 'Koniec':
-            recipe[key].append(input_arg)
-            continue
-        elif input_arg == "Koniec":
+        class_list = dict()
 
-            new_d = pd.Series(recipe)
-            addition = pd.concat([menu, new_d], axis=1)
-            addition.to_csv('menu.csv', index=False)
+        value = input("Enter value: ")
+        class_list[key] = [value]
+
+        if value !='Koniec':
+            class_list[key].append(value)
+            continue
+        elif value == 'Koniec':
             break
+
+    df = pd.DataFrame.from_dict(class_list)
+    print(df)
 
 
 
@@ -156,6 +155,9 @@ def podsumowanie():
 
 print("------------- \nWitaj w generatorze listy zakupów!\n-------------\nBaza danych zawiera:")
 print(*jedzenie, sep=', ')
+
+jedzenie = menu.columns.tolist()
+jedzenie_set = set(jedzenie)
 
 menu_creator()
 dodawanie()
