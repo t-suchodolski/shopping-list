@@ -1,28 +1,58 @@
 import os
 import pandas as pd
+from os.path import exists
 
 
-#menu = pd.read_csv('menu.csv', header=0, encoding='UTF-8')
 potrawy = []
 
+def menu_scratch():
+    output1 = pd.DataFrame()
+    while True:
+        ans1 = input("Add recipe? Y/N ")
+        if ans1 == 'Y':
+            key1 = input("What is it? ")
+            values1 = []
+            recipe1 = {key1: values1}
+            while True:
+                values1 = input("Ingredient: ")
+                if values1 != "Koniec":
+                    recipe1[key1].append(values1)
+                    df1 = pd.DataFrame.from_dict(recipe1)
+                    continue
+                else:
+                    break
 
+            output1 = pd.concat([output1, df1], axis=1, ignore_index=False)
+            continue
+        elif ans1 == 'N':
+            break
+        else:
+            print('Error, try again')
+            continue
+
+
+    new_col_menu1 = pd.DataFrame(output1)
+    new_col_menu1.to_csv('menu.csv', index=False)
 
 def menu_creator():
+    output = pd.DataFrame()
     while True:
-        ans = input("Add key? Y/N ")
+        ans = input("Add recipe? Y/N ")
         if ans == 'Y':
-
-            key = input("key: ")
+            key = input("What is it? ")
             values = []
             recipe = {key: values}
             while True:
-                values = input("Values: ")
+                values = input("Ingredient: ")
                 if values != "Koniec":
                     recipe[key].append(values)
                     df = pd.DataFrame.from_dict(recipe)
                     continue
                 else:
                     break
+
+            output = pd.concat([output, df], axis=1, ignore_index=False)
+            continue
         elif ans == 'N':
             break
         else:
@@ -30,10 +60,9 @@ def menu_creator():
             continue
 
 
-    print(df)
-
-
-
+    new_col_menu = pd.DataFrame(output)
+    creator = pd.concat([menu, new_col_menu],axis=1)
+    creator.to_csv('menu.csv', index=False)
 
 
 
@@ -161,16 +190,28 @@ def podsumowanie():
 
     os.remove("lista.txt")
 
+################################################################
+#START#
+################################################################
+file_exists = exists('menu.csv')
+if file_exists:
+    menu = pd.read_csv('menu.csv', header=0, encoding='UTF-8')
+    menu_creator()
+else:
+    menu_scratch()
+
+jedzenie = menu.columns.tolist()
+jedzenie_set = set(jedzenie)
+print("------------- \nWitaj w generatorze listy zakupów!\n-------------\nBaza danych zawiera:")
+print(*jedzenie, sep=', ')
 
 
-#print("------------- \nWitaj w generatorze listy zakupów!\n-------------\nBaza danych zawiera:")
-#print(*jedzenie, sep=', ')
 
-#jedzenie = menu.columns.tolist()
-#jedzenie_set = set(jedzenie)
 
-menu_creator()
-#dodawanie()
-#inne()
-#usuwanie()
-#podsumowanie()
+
+
+
+dodawanie()
+inne()
+usuwanie()
+podsumowanie()
