@@ -2,28 +2,38 @@ import os
 import pandas as pd
 
 
-menu = pd.read_csv('menu.csv', header=0, encoding='UTF-8')
+#menu = pd.read_csv('menu.csv', header=0, encoding='UTF-8')
 potrawy = []
-jedzenie = menu.columns.tolist()
-jedzenie_set = set(jedzenie)
+
 
 
 def menu_creator():
-    key = input("Enter key: ")
     while True:
-        class_list = dict()
+        ans = input("Add key? Y/N ")
+        if ans == 'Y':
 
-        value = input("Enter value: ")
-        class_list[key] = [value]
-
-        if value !='Koniec':
-            class_list[key].append(value)
-            continue
-        elif value == 'Koniec':
+            key = input("key: ")
+            values = []
+            recipe = {key: values}
+            while True:
+                values = input("Values: ")
+                if values != "Koniec":
+                    recipe[key].append(values)
+                    df = pd.DataFrame.from_dict(recipe)
+                    continue
+                else:
+                    break
+        elif ans == 'N':
             break
+        else:
+            print('Error, try again')
+            continue
 
-    df = pd.DataFrame.from_dict(class_list)
+
     print(df)
+
+
+
 
 
 
@@ -153,14 +163,14 @@ def podsumowanie():
 
 
 
-print("------------- \nWitaj w generatorze listy zakupów!\n-------------\nBaza danych zawiera:")
-print(*jedzenie, sep=', ')
+#print("------------- \nWitaj w generatorze listy zakupów!\n-------------\nBaza danych zawiera:")
+#print(*jedzenie, sep=', ')
 
-jedzenie = menu.columns.tolist()
-jedzenie_set = set(jedzenie)
+#jedzenie = menu.columns.tolist()
+#jedzenie_set = set(jedzenie)
 
 menu_creator()
-dodawanie()
-inne()
-usuwanie()
-podsumowanie()
+#dodawanie()
+#inne()
+#usuwanie()
+#podsumowanie()
