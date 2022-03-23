@@ -4,6 +4,9 @@ from os.path import exists
 
 
 potrawy = []
+skladniki = []
+skladniki_set = set(skladniki)
+
 
 def menu_scratch():
     output1 = pd.DataFrame()
@@ -67,13 +70,15 @@ def menu_creator():
 
 
 def dodawanie():
-    for arg in jedzenie:
-        print()
+
     while True:
         nowe = input("Dodaj obiadek: ")
         potrawy.append(nowe)
         if nowe in jedzenie and nowe != "Koniec":
             print("{} dodano do listy obiadków".format(nowe))
+            ing = menu[nowe].tolist()
+            skladniki.extend(ing)
+            skladniki_set = set(skladniki)
             jedzenie_set.remove(nowe)
             print("W bazie pozostało:", *jedzenie_set, sep=", ")
             continue
@@ -81,7 +86,8 @@ def dodawanie():
 
             while '' in jedzenie_set:
                 jedzenie_set.remove('')
-            print("Twoja lista zakupów to: ", *jedzenie_set, sep='\n- ')
+            print("Twoja lista zakupów to: ", *skladniki_set, sep='\n- ')
+
             break
         else:
             print("Nie ma takiego")
@@ -93,11 +99,11 @@ def inne():
     while True:
         dodatkowe = input("Dodaj: ")
         if dodatkowe== "Koniec":
-            jedzenie_set=set(jedzenie)
-            print("Twoja lista zakupów to: ", *jedzenie_set, sep='\n- ')
+            skladniki_set = set(skladniki)
+            print("Twoja lista zakupów to: ", *skladniki_set, sep='\n- ')
             break
         else:
-            jedzenie.append(dodatkowe)
+            skladniki.append(dodatkowe)
             continue
 
 def usuwanie():
@@ -105,14 +111,14 @@ def usuwanie():
     while True:
         usuwane = input("Usuń: ")
         if usuwane == "Koniec":
-            jedzenie_set = set(jedzenie)
-            print("Twoja lista zakupów to: ", *jedzenie_set, sep='\n- ')
+            skladniki_set = set(skladniki)
+            print("Twoja lista zakupów to: ", *skladniki_set, sep='\n- ')
             break
-        for y in jedzenie:
-            if usuwane in jedzenie:
-                jedzenie.remove(usuwane)
-                jedzenie_set = set(jedzenie)
-                print("Usunięto! Twoja lista zakupów to: ", *jedzenie_set, sep='\n- ',)
+        for y in skladniki:
+            if usuwane in skladniki:
+                skladniki.remove(usuwane)
+                skladniki_set = set(skladniki)
+                print("Usunięto! Twoja lista zakupów to: ", *skladniki_set, sep='\n- ',)
                 print("----------------")
                 break
             else:
@@ -133,8 +139,8 @@ def podsumowanie():
             usuwanie()
             continue
         elif fin== "Koniec":
-            jedzenie_set = set(jedzenie)
-            print("Gratulacje! Twoja lista zakupów to: \n-------------", *jedzenie_set, sep='\n- ',)
+            skladniki_set = set(skladniki)
+            print("Gratulacje! Twoja lista zakupów to: \n-------------", *skladniki_set, sep='\n- ',)
             print("-------------")
             adres_mail = input("Podaj maila, na który wysłać listę: ")
             break
@@ -143,7 +149,7 @@ def podsumowanie():
             continue
 
     with open('lista.txt', 'w', encoding="utf8") as filehandle:
-        for jedzenia in jedzenie:
+        for jedzenia in skladniki:
             filehandle.write('%s\n' % jedzenia)
 
     import email, smtplib, ssl, os
@@ -188,7 +194,7 @@ def podsumowanie():
         server.login(sender_email, password)
         server.sendmail(sender_email, receiver_email, text)
 
-    os.remove("lista.txt")
+os.remove("lista.txt")
 
 ################################################################
 #START#
