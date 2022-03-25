@@ -3,6 +3,7 @@ import pandas as pd
 from os.path import exists
 
 
+
 potrawy = []
 skladniki = []
 skladniki_set = set(skladniki)
@@ -18,9 +19,11 @@ def menu_scratch():
             recipe1 = {key1: values1}
             while True:
                 values1 = input("Ingredient: ")
+
                 if values1 != "Koniec":
                     recipe1[key1].append(values1)
                     df1 = pd.DataFrame.from_dict(recipe1)
+                    print(df1)
                     continue
                 else:
                     break
@@ -194,7 +197,7 @@ def podsumowanie():
         server.login(sender_email, password)
         server.sendmail(sender_email, receiver_email, text)
 
-os.remove("lista.txt")
+#os.remove("lista.txt")
 
 ################################################################
 #START#
@@ -205,6 +208,8 @@ if file_exists:
     menu_creator()
 else:
     menu_scratch()
+    menu = pd.read_csv('menu.csv', header=0, encoding='UTF-8')
+
 
 jedzenie = menu.columns.tolist()
 jedzenie_set = set(jedzenie)
