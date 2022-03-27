@@ -11,15 +11,17 @@ skladniki_set = set(skladniki)
 
 def menu_scratch():
     output1 = pd.DataFrame()
+
+
     while True:
         ans1 = input("Add recipe? Y/N ")
         if ans1 == 'Y':
             key1 = input("What is it? ")
             values1 = []
             recipe1 = {key1: values1}
+
             while True:
                 values1 = input("Ingredient: ")
-
                 if values1 != "Koniec":
                     recipe1[key1].append(values1)
                     df1 = pd.DataFrame.from_dict(recipe1)
@@ -82,6 +84,7 @@ def dodawanie():
             ing = menu[nowe].tolist()
             skladniki.extend(ing)
             skladniki_set = set(skladniki)
+
             jedzenie_set.remove(nowe)
             print("W bazie pozostało:", *jedzenie_set, sep=", ")
             continue
