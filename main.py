@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from os.path import exists
+import json
 
 
 
@@ -10,71 +11,100 @@ skladniki_set = set(skladniki)
 
 
 def menu_scratch():
-    output1 = pd.DataFrame()
-
 
     while True:
         ans1 = input("Add recipe? Y/N ")
         if ans1 == 'Y':
-            key1 = input("What is it? ")
-            values1 = []
-            recipe1 = {key1: values1}
+            key2 = input("What is it? ")
+            values2 = []
+            recipe = {key2: values2}
 
             while True:
-                values1 = input("Ingredient: ")
-                if values1 != "Koniec":
-                    recipe1[key1].append(values1)
-                    df1 = pd.DataFrame.from_dict(recipe1)
-                    print(df1)
+                values2 = input("Ingredient: ")
+                if values2 != "Koniec":
+                    #recipe[key1].append(values1)
+                    recipe.setdefault(key2,[]).append(values2)
+                    print(recipe)
                     continue
                 else:
                     break
-
-            output1 = pd.concat([output1, df1], axis=1, ignore_index=False)
-            continue
+            break
         elif ans1 == 'N':
             break
         else:
             print('Error, try again')
             continue
 
-
-    new_col_menu1 = pd.DataFrame(output1)
-    new_col_menu1.to_csv('menu.csv', index=False)
-
-def menu_creator():
-    output = pd.DataFrame()
     while True:
-        ans = input("Add recipe? Y/N ")
-        if ans == 'Y':
-            key = input("What is it? ")
-            values = []
-            recipe = {key: values}
+        ans2 = input("Add recipe? Y/N ")
+        if ans2 == 'Y':
+            key2 = input("What is it? ")
+            values2 = []
+            #recipe = {key1: values1}
+            recipe[key2] = values2
+
             while True:
-                values = input("Ingredient: ")
-                if values != "Koniec":
-                    recipe[key].append(values)
-                    df = pd.DataFrame.from_dict(recipe)
+                values2 = input("Ingredient: ")
+                if values2 != "Koniec":
+                    #recipe[key1].append(values1)
+                    recipe.setdefault(key2,[]).append(values2)
+                    print(recipe)
                     continue
                 else:
                     break
-
-            output = pd.concat([output, df], axis=1, ignore_index=False)
             continue
-        elif ans == 'N':
+        elif ans2 == 'N':
             break
         else:
             print('Error, try again')
             continue
 
+    print(recipe)
+    with open("menu.json", "a+") as file:
+        json.dump(recipe, file)
 
-    new_col_menu = pd.DataFrame(output)
-    creator = pd.concat([menu, new_col_menu],axis=1)
-    creator.to_csv('menu.csv', index=False)
+
+
+
+def menu_creator():
+
+
+    f = open('json_data.json', 'r')
+    recipe = json.load(f)
+
+    while True:
+        ans2 = input("Add recipe? Y/N ")
+        if ans2 == 'Y':
+            key2 = input("What is it? ")
+            values2 = []
+            #recipe = {key1: values1}
+            recipe[key2] = values2
+
+            while True:
+                values2 = input("Ingredient: ")
+                if values2 != "Koniec":
+                    #recipe[key1].append(values1)
+                    recipe = recipe.setdefault(key2,[]).append(values2)
+                    print(recipe)
+                    continue
+                else:
+                    break
+            continue
+        elif ans2 == 'N':
+            break
+        else:
+            print('Error, try again')
+            continue
+
+    with open("json_data.json", "r+") as file:
+        json.dump(recipe, file)
+
+
 
 
 
 def dodawanie():
+
 
     while True:
         nowe = input("Dodaj obiadek: ")
@@ -205,16 +235,15 @@ def podsumowanie():
 ################################################################
 #START#
 ################################################################
-file_exists = exists('menu.csv')
+file_exists = exists('json_data.json')
 if file_exists:
-    menu = pd.read_csv('menu.csv', header=0, encoding='UTF-8')
     menu_creator()
+
 else:
     menu_scratch()
-    menu = pd.read_csv('menu.csv', header=0, encoding='UTF-8')
 
 
-jedzenie = menu.columns.tolist()
+jedzenie = menu.keys.tolist()
 jedzenie_set = set(jedzenie)
 print("------------- \nWitaj w generatorze listy zakupów!\n-------------\nBaza danych zawiera:")
 print(*jedzenie, sep=', ')
