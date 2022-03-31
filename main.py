@@ -3,12 +3,9 @@ import pandas as pd
 from os.path import exists
 import json
 
-
-
 potrawy = []
 skladniki = []
 skladniki_set = set(skladniki)
-
 
 def menu_scratch():
 
@@ -63,29 +60,28 @@ def menu_scratch():
     with open("menu.json", "a+") as file:
         json.dump(recipe, file)
 
-
-
-
 def menu_creator():
 
 
-    f = open('json_data.json', 'r')
+    f = open('menu.json', 'r')
     recipe = json.load(f)
-
+    print(recipe)
+    f.close()
+    os.remove('menu.json')
     while True:
         ans2 = input("Add recipe? Y/N ")
         if ans2 == 'Y':
-            key2 = input("What is it? ")
-            values2 = []
-            #recipe = {key1: values1}
-            recipe[key2] = values2
+            key1 = input("What is it? ")
+            values1 = []
+            recipe1 = {key1: values1}
+            #recipe[key2] = values2
 
             while True:
-                values2 = input("Ingredient: ")
-                if values2 != "Koniec":
-                    #recipe[key1].append(values1)
-                    recipe = recipe.setdefault(key2,[]).append(values2)
-                    print(recipe)
+                values1 = input("Ingredient: ")
+                if values1 != "Koniec":
+                    recipe1[key1].append(values1)
+                    #recipe = recipe.setdefault(key2,[]).append(values2)
+
                     continue
                 else:
                     break
@@ -96,23 +92,19 @@ def menu_creator():
             print('Error, try again')
             continue
 
-    with open("json_data.json", "r+") as file:
+
+    recipe.update(recipe1)
+    with open("menu.json", "a+") as file:
         json.dump(recipe, file)
 
-
-
-
-
 def dodawanie():
-
 
     while True:
         nowe = input("Dodaj obiadek: ")
         potrawy.append(nowe)
         if nowe in jedzenie and nowe != "Koniec":
             print("{} dodano do listy obiadków".format(nowe))
-            ing = menu[nowe].tolist()
-            skladniki.extend(ing)
+            skladniki = recipe.get(nowe)
             skladniki_set = set(skladniki)
 
             jedzenie_set.remove(nowe)
@@ -235,15 +227,21 @@ def podsumowanie():
 ################################################################
 #START#
 ################################################################
-file_exists = exists('json_data.json')
-if file_exists:
-    menu_creator()
 
-else:
-    menu_scratch()
+boot = input('Open recipe creator? Y for yes, ENTER for skip: ')
+if boot == 'Y':
+    file_exists = exists('menu.json')
+    if file_exists:
+        menu_creator()
 
+    else:
+        menu_scratch()
 
-jedzenie = menu.keys.tolist()
+f = open('menu.json', 'r')
+recipe = json.load(f)
+jedzenie = []
+for key in recipe:
+    jedzenie.append(key)
 jedzenie_set = set(jedzenie)
 print("------------- \nWitaj w generatorze listy zakupów!\n-------------\nBaza danych zawiera:")
 print(*jedzenie, sep=', ')
