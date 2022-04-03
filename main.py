@@ -92,19 +92,19 @@ def menu_creator():
 def add():
 
     while True:
-        nowe = input("Add recipe or type Done to finish: ").capitalize()
-        selection.append(nowe)
-        if nowe in jedzenie and nowe != "Done":
-            print("{} added to your recipe list".format(nowe))
-            ingredient = recipe.get(nowe)
+        new = input("Add recipe or type Done to finish: ").capitalize()
+        selection.append(new)
+        if new in rec_key and new != "Done":
+            print("{} added to your recipe list".format(new))
+            ingredient = recipe.get(new)
             shopping_list.extend(ingredient)
-            jedzenie_set.remove(nowe)
-            print("Recipes left: ", *jedzenie_set, sep=", ")
+            rec_key_set.remove(new)
+            print("Recipes left: ", *rec_key_set, sep=", ")
             continue
-        elif nowe== "Done":
+        elif new== "Done":
 
-            while '' in jedzenie_set:
-                jedzenie_set.remove('')
+            while '' in rec_key_set:
+                rec_key_set.remove('')
 
             shopping_list_set = set(shopping_list)
             print("Your shopping list: ", *shopping_list_set, sep='\n- ')
@@ -191,12 +191,12 @@ if boot == 'Y':
 
 f = open('menu.json', 'r')
 recipe = json.load(f)
-jedzenie = []
+rec_key = []
 for key in recipe:
-    jedzenie.append(key)
-jedzenie_set = set(jedzenie)
+    rec_key.append(key)
+rec_key_set = set(rec_key)
 print("------------- \nWelcome to shopping list generator!!\n-------------\nYour database consists:")
-print(*jedzenie, sep=', ')
+print(*rec_key, sep=', ')
 
 add()
 other()
