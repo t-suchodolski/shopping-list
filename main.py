@@ -1,10 +1,11 @@
 import os
-import pandas as pd
+from datetime import date
 from os.path import exists
 import json
 
 potrawy = []
 skladniki = []
+lista = []
 skladniki_set = set(skladniki)
 
 def menu_scratch():
@@ -105,8 +106,7 @@ def dodawanie():
         if nowe in jedzenie and nowe != "Koniec":
             print("{} dodano do listy obiadków".format(nowe))
             skladniki = recipe.get(nowe)
-            skladniki_set = set(skladniki)
-
+            lista.extend(skladniki)
             jedzenie_set.remove(nowe)
             print("W bazie pozostało:", *jedzenie_set, sep=", ")
             continue
@@ -114,7 +114,9 @@ def dodawanie():
 
             while '' in jedzenie_set:
                 jedzenie_set.remove('')
-            print("Twoja lista zakupów to: ", *skladniki_set, sep='\n- ')
+
+            lista_set = set(lista)
+            print("Twoja lista zakupów to: ", *lista_set, sep='\n- ')
 
             break
         else:
@@ -127,11 +129,11 @@ def inne():
     while True:
         dodatkowe = input("Dodaj: ")
         if dodatkowe== "Koniec":
-            skladniki_set = set(skladniki)
-            print("Twoja lista zakupów to: ", *skladniki_set, sep='\n- ')
+            lista_set = set(lista)
+            print("Twoja lista zakupów to: ", *lista_set, sep='\n- ')
             break
         else:
-            skladniki.append(dodatkowe)
+            lista.append(dodatkowe)
             continue
 
 def usuwanie():
@@ -139,14 +141,14 @@ def usuwanie():
     while True:
         usuwane = input("Usuń: ")
         if usuwane == "Koniec":
-            skladniki_set = set(skladniki)
-            print("Twoja lista zakupów to: ", *skladniki_set, sep='\n- ')
+            lista_set = set(lista)
+            print("Twoja lista zakupów to: ", *lista_set, sep='\n- ')
             break
-        for y in skladniki:
-            if usuwane in skladniki:
-                skladniki.remove(usuwane)
-                skladniki_set = set(skladniki)
-                print("Usunięto! Twoja lista zakupów to: ", *skladniki_set, sep='\n- ',)
+        for y in lista:
+            if usuwane in lista:
+                lista.remove(usuwane)
+                lista_set = set(lista)
+                print("Usunięto! Twoja lista zakupów to: ", *lista_set, sep='\n- ',)
                 print("----------------")
                 break
             else:
@@ -167,62 +169,21 @@ def podsumowanie():
             usuwanie()
             continue
         elif fin== "Koniec":
-            skladniki_set = set(skladniki)
-            print("Gratulacje! Twoja lista zakupów to: \n-------------", *skladniki_set, sep='\n- ',)
+            lista_set = set(lista)
+            print("Gratulacje! Twoja lista zakupów to: \n-------------", *lista_set, sep='\n- ',)
             print("-------------")
-            adres_mail = input("Podaj maila, na który wysłać listę: ")
             break
         else:
             print("Błąd")
             continue
 
-    with open('lista.txt', 'w', encoding="utf8") as filehandle:
-        for jedzenia in skladniki:
+    today = str(date.today())
+
+    with open('lista ' + today + '.txt', 'w', encoding="utf8") as filehandle:
+        for jedzenia in lista:
             filehandle.write('%s\n' % jedzenia)
 
-    import email, smtplib, ssl, os
 
-    from email import encoders
-    from email.mime.base import MIMEBase
-    from email.mime.multipart import MIMEMultipart
-    from email.mime.text import MIMEText
-
-    subject = "Lista zakupów"
-    body = "This is an email with attachment sent from Python"
-    sender_email = "obiad.burner@gmail.com"
-    receiver_email = adres_mail
-    password = "Tomek1994"
-
-    message = MIMEMultipart()
-    message["From"] = sender_email
-    message["To"] = receiver_email
-    message["Subject"] = subject
-
-    message.attach(MIMEText(body, "plain"))
-
-    filename = 'lista.txt'
-
-    with open(filename, "rb") as attachment:
-
-        part = MIMEBase("application", "octet-stream")
-        part.set_payload(attachment.read())
-
-    encoders.encode_base64(part)
-
-    part.add_header(
-        "Content-Disposition",
-        f"attachment; filename= {filename}",
-    )
-
-    message.attach(part)
-    text = message.as_string()
-
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-        server.login(sender_email, password)
-        server.sendmail(sender_email, receiver_email, text)
-
-#os.remove("lista.txt")
 
 ################################################################
 #START#
@@ -245,12 +206,6 @@ for key in recipe:
 jedzenie_set = set(jedzenie)
 print("------------- \nWitaj w generatorze listy zakupów!\n-------------\nBaza danych zawiera:")
 print(*jedzenie, sep=', ')
-
-
-
-
-
-
 
 dodawanie()
 inne()
