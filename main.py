@@ -3,26 +3,24 @@ from datetime import date
 from os.path import exists
 import json
 
-potrawy = []
-skladniki = []
-lista = []
-skladniki_set = set(skladniki)
+selection = []
+ingredient = []
+shopping_list = []
+ingredient_set = set(ingredient)
 
 def menu_scratch():
 
     while True:
-        ans1 = input("Add recipe? Y/N ")
+        ans1 = input("Add recipe? Y/N ").capitalize()
         if ans1 == 'Y':
-            key2 = input("What is it? ")
+            key2 = input("What is it? ").capitalize()
             values2 = []
             recipe = {key2: values2}
 
             while True:
-                values2 = input("Ingredient: ")
-                if values2 != "Koniec":
-                    #recipe[key1].append(values1)
+                values2 = input("Add ingredient. Type Done to save: ").capitalize()
+                if values2 != "Done":
                     recipe.setdefault(key2,[]).append(values2)
-                    print(recipe)
                     continue
                 else:
                     break
@@ -34,19 +32,16 @@ def menu_scratch():
             continue
 
     while True:
-        ans2 = input("Add recipe? Y/N ")
+        ans2 = input("Add recipe? Y/N ").capitalize()
         if ans2 == 'Y':
-            key2 = input("What is it? ")
+            key2 = input("What is it? ").capitalize()
             values2 = []
-            #recipe = {key1: values1}
             recipe[key2] = values2
 
             while True:
-                values2 = input("Ingredient: ")
-                if values2 != "Koniec":
-                    #recipe[key1].append(values1)
+                values2 = input("Add ingredient. Type Done to save: ").capitalize()
+                if values2 != "Done":
                     recipe.setdefault(key2,[]).append(values2)
-                    print(recipe)
                     continue
                 else:
                     break
@@ -57,7 +52,7 @@ def menu_scratch():
             print('Error, try again')
             continue
 
-    print(recipe)
+
     with open("menu.json", "a+") as file:
         json.dump(recipe, file)
 
@@ -66,23 +61,19 @@ def menu_creator():
 
     f = open('menu.json', 'r')
     recipe = json.load(f)
-    print(recipe)
     f.close()
     os.remove('menu.json')
     while True:
-        ans2 = input("Add recipe? Y/N ")
+        ans2 = input("Add recipe? Y/N ").capitalize()
         if ans2 == 'Y':
-            key1 = input("What is it? ")
+            key1 = input("What is it? ").capitalize()
             values1 = []
             recipe1 = {key1: values1}
-            #recipe[key2] = values2
 
             while True:
-                values1 = input("Ingredient: ")
-                if values1 != "Koniec":
+                values1 = input("Add ingredient, type Done to save: ").capitalize()
+                if values1 != "Done":
                     recipe1[key1].append(values1)
-                    #recipe = recipe.setdefault(key2,[]).append(values2)
-
                     continue
                 else:
                     break
@@ -98,79 +89,79 @@ def menu_creator():
     with open("menu.json", "a+") as file:
         json.dump(recipe, file)
 
-def dodawanie():
+def add():
 
     while True:
-        nowe = input("Dodaj obiadek: ")
-        potrawy.append(nowe)
-        if nowe in jedzenie and nowe != "Koniec":
-            print("{} dodano do listy obiadków".format(nowe))
-            skladniki = recipe.get(nowe)
-            lista.extend(skladniki)
+        nowe = input("Add recipe or type Done to finish: ").capitalize()
+        selection.append(nowe)
+        if nowe in jedzenie and nowe != "Done":
+            print("{} added to your recipe list".format(nowe))
+            ingredient = recipe.get(nowe)
+            shopping_list.extend(ingredient)
             jedzenie_set.remove(nowe)
-            print("W bazie pozostało:", *jedzenie_set, sep=", ")
+            print("Recipes left: ", *jedzenie_set, sep=", ")
             continue
-        elif nowe== "Koniec":
+        elif nowe== "Done":
 
             while '' in jedzenie_set:
                 jedzenie_set.remove('')
 
-            lista_set = set(lista)
-            print("Twoja lista zakupów to: ", *lista_set, sep='\n- ')
+            shopping_list_set = set(shopping_list)
+            print("Your shopping list: ", *shopping_list_set, sep='\n- ')
 
             break
         else:
-            print("Nie ma takiego")
+            print("Object unavailable")
             continue
 
 
-def inne():
-    print("----------------\nChcesz dodać coś jeszcze?\nJeśli nie, ponownie wpisz Koniec")
+def other():
+    print("----------------\nWould you like to add anything more?\nIf not, type Done again")
     while True:
-        dodatkowe = input("Dodaj: ")
-        if dodatkowe== "Koniec":
-            lista_set = set(lista)
-            print("Twoja lista zakupów to: ", *lista_set, sep='\n- ')
+        dodatkowe = input("Add: ").capitalize()
+        if dodatkowe== "Done":
+            shopping_list_set = set(shopping_list)
+            print("Your shopping list: ", *shopping_list_set, sep='\n- ')
             break
         else:
-            lista.append(dodatkowe)
+            shopping_list.append(dodatkowe)
             continue
 
-def usuwanie():
-    print("----------------\nMasz już coś? Wpisz aby usunąć, lub wpisz Koniec, aby przejść do podsumowania!")
+def delete():
+    print("----------------\nGot something already? Type it to delete, or type Done to proceed to summary!")
     while True:
-        usuwane = input("Usuń: ")
-        if usuwane == "Koniec":
-            lista_set = set(lista)
-            print("Twoja lista zakupów to: ", *lista_set, sep='\n- ')
+        usuwane = input("Delete: ").capitalize()
+        if usuwane == "Done":
+            shopping_list_set = set(shopping_list)
+            print("Your shopping list: ", *shopping_list_set, sep='\n- ')
             break
-        for y in lista:
-            if usuwane in lista:
-                lista.remove(usuwane)
-                lista_set = set(lista)
-                print("Usunięto! Twoja lista zakupów to: ", *lista_set, sep='\n- ',)
+        for y in shopping_list:
+            if usuwane in shopping_list:
+                shopping_list.remove(usuwane)
+                shopping_list_set = set(shopping_list)
+                print("Deleted! Your shopping list: ", *shopping_list_set, sep='\n- ',)
                 print("----------------")
                 break
             else:
-                print("Nie ma tego na liście!")
+                print("No such object!")
                 break
         continue
 
-def podsumowanie():
+def summary():
     while True:
-        fin = input("-----------\nPrawie koniec! Wpisz Obiad, Dodaj, lub Usuń, aby edytować listę\nWpisz Koniec, aby otrzymać maila z listą ")
-        if fin== "Obiad":
-            dodawanie()
+        fin = input("-----------\nAlmost done! Type Recipe, Add, or Delete, To edit your list\nType Done to receive the list ").capitalize()
+        if fin== "Recipe":
+            add()
             continue
-        elif fin== "Dodaj":
-            inne()
+        elif fin== "Add":
+            other()
             continue
-        elif fin== "Usuń":
-            usuwanie()
+        elif fin== "Delete":
+            delete()
             continue
-        elif fin== "Koniec":
-            lista_set = set(lista)
-            print("Gratulacje! Twoja lista zakupów to: \n-------------", *lista_set, sep='\n- ',)
+        elif fin== "Done":
+            shopping_list_set = set(shopping_list)
+            print("Congrats! Your shopping list: \n-------------", *shopping_list_set, sep='\n- ',)
             print("-------------")
             break
         else:
@@ -179,8 +170,8 @@ def podsumowanie():
 
     today = str(date.today())
 
-    with open('lista ' + today + '.txt', 'w', encoding="utf8") as filehandle:
-        for jedzenia in lista:
+    with open('shopping_list ' + today + '.txt', 'w', encoding="utf8") as filehandle:
+        for jedzenia in shopping_list:
             filehandle.write('%s\n' % jedzenia)
 
 
@@ -189,7 +180,7 @@ def podsumowanie():
 #START#
 ################################################################
 
-boot = input('Open recipe creator? Y for yes, ENTER for skip: ')
+boot = input('Open recipe creator? Y for yes, ENTER for skip: ').capitalize()
 if boot == 'Y':
     file_exists = exists('menu.json')
     if file_exists:
@@ -204,10 +195,10 @@ jedzenie = []
 for key in recipe:
     jedzenie.append(key)
 jedzenie_set = set(jedzenie)
-print("------------- \nWitaj w generatorze listy zakupów!\n-------------\nBaza danych zawiera:")
+print("------------- \nWelcome to shopping list generator!!\n-------------\nYour database consists:")
 print(*jedzenie, sep=', ')
 
-dodawanie()
-inne()
-usuwanie()
-podsumowanie()
+add()
+other()
+delete()
+summary()
