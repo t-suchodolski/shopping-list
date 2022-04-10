@@ -3,6 +3,7 @@ from datetime import date
 from os.path import exists
 import json
 
+
 selection = []
 ingredient = []
 shopping_list = []
